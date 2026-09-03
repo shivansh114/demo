@@ -38,7 +38,7 @@ except ImportError:
     print("Missing dependency. Run: pip install google-genai")
     sys.exit(1)
 
-DATA_FILE = os.path.join(os.path.dirname(__file__), "bis_mock_dataset.json")
+DATA_FILE = os.path.join(os.path.dirname(__file__), "bis_full_dataset.json")
 MODEL_NAME = "gemini-3.6-flash"
 
 app = Flask(__name__, static_folder="static")
@@ -69,7 +69,16 @@ def search_product(query: str) -> str:
     query (a product name or description). Returns the applicable Indian
     Standard (IS number), certification scheme, whether it is mandatory,
     the legal basis, scope, and regulating body for the best-matching
-    product(s). Returns an empty result if nothing matches well.
+    product(s).
+
+    If the query is broad and matches many similarly-relevant products
+    (e.g. "cement" matches 14+ different cement types), this returns
+    "ambiguous": true with a short list of options instead of full
+    details - in that case, list the options for the user and ask
+    which one they mean BEFORE giving a final answer. Do not guess
+    which one the user wants.
+
+    Returns "found": false if nothing matches well.
 
     Args:
         query: A product name or short description, e.g. "pressure cooker"
@@ -77,14 +86,38 @@ def search_product(query: str) -> str:
     """
     query_vec = _vectorizer.transform([query])
     sims = cosine_similarity(query_vec, _tfidf_matrix).flatten()
-    ranked_idx = sims.argsort()[::-1][:3]
-    matches = [(_products[i], sims[i]) for i in ranked_idx if sims[i] >= 0.05]
+    ranked_idx = sims.argsort()[::-1][:15]
+    candidates = [(_products[i], sims[i]) for i in ranked_idx if sims[i] >= 0.05]
 
-    if not matches:
+    if not candidates:
         return json.dumps({"found": False, "message": "No matching product found in the database."})
 
+    top_score = candidates[0][1]
+    # "Close" matches: within 75% of the top score - i.e. no single result
+    # clearly dominates, so the query is likely a broad category term.
+    close_matches = [c for c in candidates if c[1] >= top_score * 0.75]
+
+    if len(close_matches) >= 3:
+        options = [{
+            "product_name": product["product_name"],
+            "category": product["category"],
+            "is_standard": product["is_standard"],
+            "scheme": product["scheme"],
+        } for product, score in close_matches[:8]]
+        return json.dumps({
+            "found": True,
+            "ambiguous": True,
+            "message": (
+                f"The query '{query}' matches {len(close_matches)} different "
+                "products - too broad to answer directly. Present these "
+                "options to the user (as a short list) and ask which one "
+                "they mean before giving a final answer."
+            ),
+            "options": options,
+        })
+
     results = []
-    for product, score in matches:
+    for product, score in candidates[:3]:
         results.append({
             "product_name": product["product_name"],
             "category": product["category"],
@@ -96,7 +129,7 @@ def search_product(query: str) -> str:
             "regulating_ministry": product["regulating_ministry"],
             "match_confidence": round(float(score), 3),
         })
-    return json.dumps({"found": True, "results": results})
+    return json.dumps({"found": True, "ambiguous": False, "results": results})
 
 
 def get_certification_steps(scheme: str) -> str:
@@ -176,6 +209,11 @@ certification step that didn't come from a tool result.
 
 TOOL USE GUIDANCE:
 - If the user asks about a specific product, call search_product first.
+- If search_product returns "ambiguous": true, DO NOT pick one for the user \
+or answer as if you know which they mean. Instead, list the option names \
+(and their IS numbers) as a short numbered or bulleted list, and ask which \
+one matches their product. Wait for their reply before calling any other \
+tool or giving a final answer.
 - If the user then asks how to get certified/licensed for that product, call \
 get_certification_steps with the scheme name returned by search_product.
 - If the user asks what products/categories you cover, call \
