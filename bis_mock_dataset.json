@@ -1,0 +1,236 @@
+{
+  "_meta": {
+    "purpose": "Mock dataset for BIS AI Assistant prototype (SIH Problem Statement 26107)",
+    "note": "Compiled from PUBLICLY available BIS scheme pages and certification-consultant sites. Full IS standard text is NOT free/public and must be purchased from BIS or accessed via an official BIS data-sharing agreement in production. This mock data covers product name, applicable IS number, scheme type, and basic scope only — sufficient for a hackathon demo of the matching/RAG logic.",
+    "schemes": {
+      "ISI": "Scheme I - Mandatory factory inspection + license. Used for items like cement, steel, pressure cookers, LPG stoves.",
+      "CRS": "Scheme II - Compulsory Registration Scheme. Self-declaration + testing, no factory inspection. Used for electronics/IT and solar goods.",
+      "Hallmarking": "Purity certification scheme for gold and silver jewellery.",
+      "FMCS": "Foreign Manufacturers Certification Scheme - for overseas manufacturers selling regulated products in India.",
+      "Voluntary": "No mandatory QCO; manufacturer may opt in for ISI mark voluntarily."
+    }
+  },
+  "products": [
+    {
+      "product_name": "Domestic Pressure Cooker",
+      "category": "Kitchen Appliances",
+      "is_standard": "IS 2347:2017",
+      "scheme": "ISI",
+      "mandatory": true, 
+      "legal_basis": "Domestic Pressure Cooker (Quality Control) Order, 2020",
+      "scope_summary": "Specifies material, safety valve design, pressure release mechanism, and testing methods for domestic pressure cookers.",
+      "regulating_ministry": "DPIIT / BIS"
+    },
+    {
+      "product_name": "LPG Gas Stove (Domestic)",
+      "category": "Kitchen Appliances",
+      "is_standard": "IS 4246",
+      "scheme": "ISI",
+      "mandatory": true,
+      "legal_basis": "BIS mandatory QCO for LPG stoves",
+      "scope_summary": "Safety, design, and performance requirements for domestic LPG gas stoves.",
+      "regulating_ministry": "BIS"
+    },
+    {
+      "product_name": "LPG Cylinder",
+      "category": "Gas Equipment",
+      "is_standard": "IS 3196",
+      "scheme": "ISI",
+      "mandatory": true,
+      "legal_basis": "Mandatory under PESO + BIS jointly",
+      "scope_summary": "Manufacturing, testing, and safety requirements for LPG cylinders to prevent leakage/explosion.",
+      "regulating_ministry": "BIS / PESO"
+    },
+    {
+      "product_name": "Ordinary Portland Cement (OPC)",
+      "category": "Construction Materials",
+      "is_standard": "IS 269",
+      "scheme": "ISI",
+      "mandatory": true,
+      "legal_basis": "Cement (Quality Control) Order",
+      "scope_summary": "Composition, strength grades, and quality requirements for OPC cement.",
+      "regulating_ministry": "BIS"
+    },
+    {
+      "product_name": "Portland Pozzolana Cement (PPC)",
+      "category": "Construction Materials",
+      "is_standard": "IS 1489",
+      "scheme": "ISI",
+      "mandatory": true,
+      "legal_basis": "Cement (Quality Control) Order",
+      "scope_summary": "Requirements for pozzolana-blended cement used in construction.",
+      "regulating_ministry": "BIS"
+    },
+    {
+      "product_name": "Structural Steel Bars/Rods",
+      "category": "Steel & Metal",
+      "is_standard": "IS 1786",
+      "scheme": "ISI",
+      "mandatory": true,
+      "legal_basis": "Steel (Quality Control) Order",
+      "scope_summary": "High strength deformed steel bars for concrete reinforcement.",
+      "regulating_ministry": "BIS"
+    },
+    {
+      "product_name": "Laptop",
+      "category": "Electronics & IT",
+      "is_standard": "IS 13252",
+      "scheme": "CRS",
+      "mandatory": true,
+      "legal_basis": "Electronics and IT Goods (Compulsory Registration) Order, 2012",
+      "scope_summary": "Safety requirements for information technology equipment including laptops.",
+      "regulating_ministry": "MeitY / BIS"
+    },
+    {
+      "product_name": "Mobile Phone / Smartphone",
+      "category": "Electronics & IT",
+      "is_standard": "IS 13252 (Part 1)",
+      "scheme": "CRS",
+      "mandatory": true,
+      "legal_basis": "Electronics and IT Goods (Compulsory Registration) Order, 2012",
+      "scope_summary": "Safety and EMI/EMC requirements for mobile communication devices.",
+      "regulating_ministry": "MeitY / BIS"
+    },
+    {
+      "product_name": "LED Light / Bulb",
+      "category": "Electronics & Lighting",
+      "is_standard": "IS 16102 (Part 1 & 2)",
+      "scheme": "CRS",
+      "mandatory": true,
+      "legal_basis": "Electronics and IT Goods (Compulsory Registration) Order",
+      "scope_summary": "Safety and performance requirements for self-ballasted LED lamps.",
+      "regulating_ministry": "MeitY / BIS"
+    },
+    {
+      "product_name": "Power Adapter / Charger",
+      "category": "Electronics & IT",
+      "is_standard": "IS 13252",
+      "scheme": "CRS",
+      "mandatory": true,
+      "legal_basis": "Electronics and IT Goods (Compulsory Registration) Order",
+      "scope_summary": "Safety requirements for power supply units/adapters used with IT equipment.",
+      "regulating_ministry": "MeitY / BIS"
+    },
+    {
+      "product_name": "Smart Watch",
+      "category": "Electronics & IT",
+      "is_standard": "IS 616 / CRS notified standard",
+      "scheme": "CRS",
+      "mandatory": true,
+      "legal_basis": "CRS Phase expansion (2020s)",
+      "scope_summary": "Safety and radio-frequency compliance for wearable smart devices.",
+      "regulating_ministry": "MeitY / BIS"
+    },
+    {
+      "product_name": "Crystalline Silicon PV Module (Solar Panel)",
+      "category": "Solar Photovoltaics",
+      "is_standard": "IS 14286",
+      "scheme": "CRS",
+      "mandatory": true,
+      "legal_basis": "Solar Photovoltaics, Systems, Devices and Components Goods (Compulsory Registration) Order, 2017",
+      "scope_summary": "Design qualification and safety of crystalline silicon terrestrial PV modules.",
+      "regulating_ministry": "MNRE / BIS"
+    },
+    {
+      "product_name": "Gold Jewellery (22K/18K/14K)",
+      "category": "Jewellery",
+      "is_standard": "IS 1417 (Hallmark - BIS 916 for 22K)",
+      "scheme": "Hallmarking",
+      "mandatory": true,
+      "legal_basis": "BIS Hallmarking mandatory order (jewellers above prescribed turnover)",
+      "scope_summary": "Purity grading and hallmark stamping requirements for gold jewellery.",
+      "regulating_ministry": "BIS"
+    },
+    {
+      "product_name": "Silver Jewellery/Articles",
+      "category": "Jewellery",
+      "is_standard": "IS 2112 (BIS 925 grade)",
+      "scheme": "Hallmarking",
+      "mandatory": true,
+      "legal_basis": "BIS Hallmarking Scheme for silver",
+      "scope_summary": "Purity certification for silver articles (925 sterling grade and others).",
+      "regulating_ministry": "BIS"
+    },
+    {
+      "product_name": "Electric Iron",
+      "category": "Household Electrical Appliances",
+      "is_standard": "IS 302 (Part 2)",
+      "scheme": "ISI",
+      "mandatory": true,
+      "legal_basis": "Household Electrical Appliances (Quality Control) Order",
+      "scope_summary": "Safety requirements for household electric flat irons.",
+      "regulating_ministry": "BIS"
+    },
+    {
+      "product_name": "Ceiling/Table Fan",
+      "category": "Household Electrical Appliances",
+      "is_standard": "IS 374 / IS 302-2-80",
+      "scheme": "ISI",
+      "mandatory": true,
+      "legal_basis": "Household Electrical Appliances (Quality Control) Order",
+      "scope_summary": "Performance and safety requirements for electric fans.",
+      "regulating_ministry": "BIS"
+    },
+    {
+      "product_name": "Toys (for children under 14)",
+      "category": "Toys",
+      "is_standard": "IS 9873 (Parts 1-9)",
+      "scheme": "ISI",
+      "mandatory": true,
+      "legal_basis": "Toys (Quality Control) Order, 2020",
+      "scope_summary": "Safety requirements covering mechanical/physical properties, flammability, and toxic elements in toys.",
+      "regulating_ministry": "BIS"
+    },
+    {
+      "product_name": "Drinking Water Bottles (Packaged)",
+      "category": "Food & Packaging",
+      "is_standard": "IS 14543",
+      "scheme": "ISI",
+      "mandatory": true,
+      "legal_basis": "Packaged Drinking Water (Quality Control) Order",
+      "scope_summary": "Quality and safety specifications for packaged drinking water.",
+      "regulating_ministry": "BIS / FSSAI (dual compliance)"
+    },
+    {
+      "product_name": "Helmet (Protective, for two-wheelers)",
+      "category": "Safety Equipment",
+      "is_standard": "IS 4151",
+      "scheme": "ISI",
+      "mandatory": true,
+      "legal_basis": "Motor Vehicle rules + BIS mandatory order",
+      "scope_summary": "Protective helmet requirements for two-wheeler riders.",
+      "regulating_ministry": "MoRTH / BIS"
+    },
+    {
+      "product_name": "Refrigerator",
+      "category": "Household Electrical Appliances",
+      "is_standard": "IS 302 (Part 2/Sec 24)",
+      "scheme": "Voluntary",
+      "mandatory": false,
+      "legal_basis": "Not currently under mandatory QCO (check latest notification)",
+      "scope_summary": "Safety requirements for household refrigerating appliances.",
+      "regulating_ministry": "BIS"
+    }
+  ],
+  "certification_workflow_steps": {
+    "ISI": [
+      "Apply online via BIS Manak Online portal",
+      "Submit product test report from BIS-recognized lab",
+      "Factory inspection by BIS officials",
+      "Grant of license and ISI mark usage rights",
+      "Periodic surveillance/renewal"
+    ],
+    "CRS": [
+      "Identify applicable IS/IEC standard for the product",
+      "Get product tested at a BIS-recognized/NABL-accredited lab (report valid 90 days)",
+      "Submit self-declaration + test report via CRS portal (crsbis.in)",
+      "Receive BIS Registration (R) Number",
+      "Affix BIS Standard Mark with R-number on product"
+    ],
+    "Hallmarking": [
+      "Register as a jeweller with BIS",
+      "Get jewellery tested and hallmarked at a BIS-recognized Assaying & Hallmarking Centre",
+      "Hallmark stamped includes BIS mark, purity grade, AHC mark, and unique HUID number"
+    ]
+  }
+}

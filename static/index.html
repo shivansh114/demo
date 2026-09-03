@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIS Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #131314;
+    --surface: #1e1f20;
+    --surface-2: #26282b;
+    --border: #34363a;
+    --text-primary: #e8eaed;
+    --text-secondary: #9aa0a6;
+    --accent-1: #4f7cff;
+    --accent-2: #9b6bff;
+    --gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(-8px);
+    animation: headerIn 0.6s ease forwards;
+  }
+
+  @keyframes headerIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .mark {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 4px 18px rgba(79, 124, 255, 0.25);
+  }
+
+  header h1 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  header p {
+    margin: 2px 0 0 0;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+  }
+
+  #resetBtn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 16px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  #resetBtn:hover {
+    border-color: var(--accent-1);
+    color: var(--text-primary);
+  }
+
+  #voiceToggle {
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 16px;
+    padding: 7px 12px;
+    font-size: 12.5px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #voiceToggle:hover {
+    border-color: var(--accent-1);
+    color: var(--text-primary);
+  }
+
+  #voiceToggle.active {
+    border-color: var(--accent-1);
+    color: var(--text-primary);
+    background: rgba(79, 124, 255, 0.12);
+  }
+
+  #voiceToggle svg { width: 14px; height: 14px; }
+
+  /* ---------- Example chips ---------- */
+  .examples {
+    display: flex;
+    gap: 8px;
+    padding: 14px 28px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: headerIn 0.6s ease 0.15s forwards;
+  }
+
+  .example-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 18px;
+    padding: 7px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+
+  .example-chip:hover {
+    border-color: var(--accent-1);
+    color: var(--text-primary);
+    background: var(--surface-2);
+  }
+
+  /* ---------- Chat area ---------- */
+  #chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 28px 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  #chat::-webkit-scrollbar { width: 8px; }
+  #chat::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .msg {
+    max-width: 68%;
+    padding: 13px 17px;
+    border-radius: 16px;
+    line-height: 1.55;
+    font-size: 14.5px;
+    white-space: pre-wrap;
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+    animation: msgIn 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  @keyframes msgIn {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .msg.user {
+    align-self: flex-end;
+    background: var(--gradient);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+
+  .msg.bot {
+    align-self: flex-start;
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+  }
+
+  .matched-tags {
+    align-self: flex-start;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    margin-top: -10px;
+    margin-left: 4px;
+    opacity: 0;
+    animation: msgIn 0.28s ease forwards;
+  }
+
+  .matched-tags span {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2px 9px;
+    margin-right: 5px;
+  }
+
+  /* ---------- Typing indicator ---------- */
+  .typing {
+    align-self: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    display: flex;
+    gap: 5px;
+    opacity: 0;
+    animation: msgIn 0.28s ease forwards;
+  }
+
+  .typing span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    animation: bounce 1.1s infinite ease-in-out;
+  }
+
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-5px); opacity: 1; }
+  }
+
+  /* ---------- Input bar ---------- */
+  #inputBar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 28px 22px 28px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+
+  #userInput {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 13px 18px;
+    border-radius: 24px;
+    font-size: 14.5px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #userInput::placeholder { color: var(--text-secondary); }
+
+  #userInput:focus {
+    border-color: var(--accent-1);
+    box-shadow: 0 0 0 3px rgba(79, 124, 255, 0.15);
+  }
+
+  #sendBtn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: var(--gradient);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 16px rgba(79, 124, 255, 0.3);
+  }
+
+  #sendBtn:hover:not(:disabled) {
+    transform: scale(1.06);
+    box-shadow: 0 6px 20px rgba(79, 124, 255, 0.4);
+  }
+
+  #sendBtn:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  #sendBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  #sendBtn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  #micBtn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+
+  #micBtn:hover {
+    border-color: var(--accent-1);
+    color: var(--text-primary);
+  }
+
+  #micBtn.listening {
+    border-color: #ff5a5a;
+    color: #ff5a5a;
+    background: rgba(255, 90, 90, 0.1);
+    animation: micPulse 1.2s infinite ease-in-out;
+  }
+
+  @keyframes micPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 90, 90, 0.35); }
+    50% { box-shadow: 0 0 0 8px rgba(255, 90, 90, 0); }
+  }
+
+  #micBtn svg { width: 18px; height: 18px; }
+
+  #micBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .error-text {
+    color: #ff8a8a !important;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mark">BIS</div>
+  <div>
+    <h1>BIS Assistant</h1>
+    <p>Indian Standards &amp; certification guidance</p>
+  </div>
+  <button id="voiceToggle" title="Toggle spoken replies">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 5L6 9H3V15H6L11 19V5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M15.5 8.5C16.5 9.5 17 10.7 17 12C17 13.3 16.5 14.5 15.5 15.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    <span id="voiceToggleLabel">Voice off</span>
+  </button>
+  <button id="resetBtn" title="Start new conversation">New chat</button>
+</header>
+
+<div class="examples" id="examples">
+  <div class="example-chip" data-q="What standard applies to my pressure cooker?">Pressure cooker standard</div>
+  <div class="example-chip" data-q="How do I get ISI certification for cement?">ISI certification for cement</div>
+  <div class="example-chip" data-q="What scheme applies to LED bulbs?">LED bulb scheme</div>
+  <div class="example-chip" data-q="pressure cooker ka standard kya hai">Ask in Hinglish</div>
+</div>
+
+<div id="chat"></div>
+
+<div id="inputBar">
+  <button id="micBtn" aria-label="Voice input" title="Speak your question">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 15C13.66 15 15 13.66 15 12V6C15 4.34 13.66 3 12 3C10.34 3 9 4.34 9 6V12C9 13.66 10.34 15 12 15Z" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M19 11V12C19 15.87 15.87 19 12 19C8.13 19 5 15.87 5 12V11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M12 19V22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <input type="text" id="userInput" placeholder="Ask about a product, e.g. 'pressure cooker'..." autocomplete="off">
+  <button id="sendBtn" aria-label="Send message">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 11L21 3L13 21L11 13L3 11Z" stroke="white" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+  </button>
+</div>
+
+<script>
+const chat = document.getElementById('chat');
+const input = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+const examples = document.getElementById('examples');
+const resetBtn = document.getElementById('resetBtn');
+const micBtn = document.getElementById('micBtn');
+const voiceToggle = document.getElementById('voiceToggle');
+const voiceToggleLabel = document.getElementById('voiceToggleLabel');
+
+let voiceRepliesOn = false;
+
+function addMessage(text, sender) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + sender;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+function addTypingIndicator() {
+  const div = document.createElement('div');
+  div.className = 'typing';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+function addMatchedTags(products) {
+  if (!products || products.length === 0) return;
+  const div = document.createElement('div');
+  div.className = 'matched-tags';
+  div.innerHTML = 'Matched: ' + products.map(p => `<span>${p}</span>`).join('');
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function sendMessage(text) {
+  if (!text.trim()) return;
+  addMessage(text, 'user');
+  input.value = '';
+  sendBtn.disabled = true;
+
+  const typingDiv = addTypingIndicator();
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text })
+    });
+    const data = await res.json();
+
+    typingDiv.remove();
+
+    if (data.error) {
+      const errDiv = addMessage(data.error, 'bot');
+      errDiv.classList.add('error-text');
+    } else {
+      addMessage(data.answer, 'bot');
+      addMatchedTags(data.matched_products);
+      if (voiceRepliesOn) speakText(data.answer);
+    }
+  } catch (err) {
+    typingDiv.remove();
+    const errDiv = addMessage('Network error: could not reach the server.', 'bot');
+    errDiv.classList.add('error-text');
+  }
+
+  sendBtn.disabled = false;
+  input.focus();
+}
+
+sendBtn.addEventListener('click', () => sendMessage(input.value));
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') sendMessage(input.value);
+});
+examples.addEventListener('click', (e) => {
+  const chip = e.target.closest('.example-chip');
+  if (chip) sendMessage(chip.dataset.q);
+});
+
+resetBtn.addEventListener('click', async () => {
+  await fetch('/api/reset', { method: 'POST' });
+  chat.innerHTML = '';
+  addMessage("New conversation started. Tell me any product name and I'll find its applicable IS standard and certification steps.", 'bot');
+});
+
+// ---------- Voice input (speech-to-text) ----------
+const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognizing = false;
+let recognizer = null;
+
+if (SpeechRecognitionAPI) {
+  recognizer = new SpeechRecognitionAPI();
+  recognizer.lang = 'en-IN';
+  recognizer.interimResults = false;
+  recognizer.maxAlternatives = 1;
+
+  recognizer.onstart = () => {
+    recognizing = true;
+    micBtn.classList.add('listening');
+  };
+
+  recognizer.onend = () => {
+    recognizing = false;
+    micBtn.classList.remove('listening');
+  };
+
+  recognizer.onerror = () => {
+    recognizing = false;
+    micBtn.classList.remove('listening');
+  };
+
+  recognizer.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    input.value = transcript;
+    sendMessage(transcript);
+  };
+
+  micBtn.addEventListener('click', () => {
+    if (recognizing) {
+      recognizer.stop();
+    } else {
+      recognizer.start();
+    }
+  });
+} else {
+  micBtn.disabled = true;
+  micBtn.title = 'Voice input not supported in this browser (try Chrome or Edge)';
+}
+
+// ---------- Voice output (text-to-speech) ----------
+function speakText(text) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel(); // stop any prior speech before starting new
+  const utterance = new SpeechSynthesisUtterance(text);
+  // Devanagari text -> Hindi voice, otherwise English (handles Hinglish reasonably)
+  const isDevanagari = /[\u0900-\u097F]/.test(text);
+  utterance.lang = isDevanagari ? 'hi-IN' : 'en-IN';
+  window.speechSynthesis.speak(utterance);
+}
+
+voiceToggle.addEventListener('click', () => {
+  voiceRepliesOn = !voiceRepliesOn;
+  voiceToggle.classList.toggle('active', voiceRepliesOn);
+  voiceToggleLabel.textContent = voiceRepliesOn ? 'Voice on' : 'Voice off';
+  if (!voiceRepliesOn && 'speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+});
+
+// Welcome message
+setTimeout(() => {
+  addMessage("Hello! I'm the BIS Assistant. Tell me any product name (like 'pressure cooker' or 'LED bulb') and I'll find its applicable IS standard and certification steps.", 'bot');
+}, 350);
+</script>
+
+</body>
+</html>
